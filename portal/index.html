@@ -1,1 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión — Mi Banco</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body>
 
+<div class="auth-wrapper">
+  <div class="card auth-card p-4">
+
+    <!-- Logo -->
+    <div class="text-center mb-4">
+      <i class="bi bi-bank2 text-primary" style="font-size:2.5rem"></i>
+      <div class="auth-logo mt-2">MI BANCO</div>
+      <p class="text-muted small">Portal de Banca en Línea</p>
+    </div>
+
+    <!-- Alerta de error -->
+    <div id="alertError" class="alert alert-danger d-none" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      <span id="alertMsg">Error al iniciar sesión.</span>
+    </div>
+
+    <!-- Formulario Login -->
+    <form id="formLogin">
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Correo electrónico</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+          <input type="email" id="email" class="form-control"
+                 placeholder="cliente@mimail.com" required>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock"></i></span>
+          <input type="password" id="password" class="form-control"
+                 placeholder="Mínimo 8 caracteres" required minlength="8">
+          <button class="btn btn-outline-secondary" type="button" id="togglePwd">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe">
+          <label class="form-check-label small" for="rememberMe">Recordarme</label>
+        </div>
+        <a href="#" class="small text-muted">¿Olvidé mi contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="btnLogin">
+        <span id="btnLoginText"><i class="bi bi-box-arrow-in-right me-2"></i>Ingresar</span>
+        <span id="btnLoginSpinner" class="d-none">
+          <span class="spinner-border spinner-border-sm me-2"></span>Verificando...
+        </span>
+      </button>
+    </form>
+
+    <hr class="my-3">
+    <p class="text-center small text-muted mb-0">
+      ¿No tienes cuenta?
+      <a href="registro.html" class="text-primary fw-semibold">Regístrate aquí</a>
+    </p>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+  import { supabase, requireAuth } from '../js/supabase.js';
+
+  // Si ya hay sesión activa → ir directo al dashboard
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) window.location.replace('/modulos/dashboard.html');
+
+  // ── Toggle ver/ocultar contraseña ──────────────────────
+  document.getElementById('togglePwd').addEventListener('click', () => {
+    const input = document.getElementById('password');
+    const icon  = document.querySelector('#togglePwd i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  });
+
+  // ── Submit login ───────────────────────────────────────
+  document.getElementById('formLogin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    // Mostrar spinner en botón
+    document.getElementById('btnLoginText').classList.add('d-none');
+    document.getElementById('btnLoginSpinner').classList.remove('d-none');
+    document.getElementById('alertError').classList.add('d-none');
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      document.getElementById('alertMsg').textContent =
+        'Correo o contraseña incorrectos. Verifica tus datos.';
+      document.getElementById('alertError').classList.remove('d-none');
+      document.getElementById('btnLoginText').classList.remove('d-none');
+      document.getElementById('btnLoginSpinner').classList.add('d-none');
+      return;
+    }
+
+    // Éxito → redirigir al dashboard
+    window.location.replace('/modulos/dashboard.html');
+  });
+</script>
+</body>
+</html>
