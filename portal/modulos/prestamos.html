@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Préstamos — Mi Banco</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="appToast" class="toast align-items-center text-white bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body" id="toastBody">OK</div>
+      <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de solicitud enviada -->
+<div class="modal fade" id="modalExito" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="modal-body">
+        <div class="mb-3">
+          <i class="bi bi-check-circle-fill text-success" style="font-size:3.5rem"></i>
+        </div>
+        <h5 class="fw-bold">¡Solicitud enviada!</h5>
+        <p class="text-muted">Tu solicitud de préstamo fue registrada exitosamente.</p>
+        <div class="bg-light rounded p-3 mb-3 text-start small">
+          <div class="row g-2">
+            <div class="col-6 text-muted">N° Solicitud:</div>
+            <div class="col-6 fw-bold text-primary font-monospace" id="numSolicitud">—</div>
+            <div class="col-6 text-muted">Monto:</div>
+            <div class="col-6 fw-bold" id="exitoMonto">—</div>
+            <div class="col-6 text-muted">Cuota mensual:</div>
+            <div class="col-6 fw-bold text-success" id="exitoCuota">—</div>
+            <div class="col-6 text-muted">Estado:</div>
+            <div class="col-6"><span class="badge bg-warning text-dark">En evaluación</span></div>
+          </div>
+        </div>
+        <p class="text-muted small">Te notificaremos el resultado en un plazo de 24 a 48 horas hábiles.</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-banco">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="dashboard.html"><i class="bi bi-bank me-2"></i>MI BANCO</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <li class="nav-item">
+          <span class="nav-link" style="color:var(--color-acento);font-weight:600">
+            <i class="bi bi-person-circle me-1"></i><span id="userName">Cliente</span>
+          </span>
+        </li>
+        <li><button class="btn btn-sm btn-outline-light" id="btnLogout">
+          <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
+        </button></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="portal-layout">
+  <nav class="sidebar d-none d-lg-block">
+    <ul class="nav flex-column">
+      <li><a class="nav-link" href="dashboard.html"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
+      <li><a class="nav-link" href="transacciones.html"><i class="bi bi-arrow-left-right"></i> Transacciones</a></li>
+      <li><a class="nav-link" href="pagos.html"><i class="bi bi-credit-card"></i> Pagos</a></li>
+      <li><a class="nav-link active" href="prestamos.html"><i class="bi bi-cash-stack"></i> Préstamos</a></li>
+      <li><a class="nav-link" href="ahorro.html"><i class="bi bi-piggy-bank"></i> Ahorro</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <h4 class="fw-bold mb-1"><i class="bi bi-cash-stack me-2 text-primary"></i>Solicitud de Préstamo</h4>
+    <p class="text-muted small mb-4">Simula tu cuota y solicita tu crédito en minutos</p>
+
+    <div class="row g-4">
+
+      <!-- Simulador -->
+      <div class="col-12 col-lg-5">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0 pt-3">
+            <h6 class="fw-bold mb-0"><i class="bi bi-calculator me-2 text-primary"></i>Simulador de préstamo</h6>
+          </div>
+          <div class="card-body">
+
+            <div class="mb-4">
+              <div class="d-flex justify-content-between mb-1">
+                <label class="form-label fw-semibold mb-0">Monto del préstamo</label>
+                <span class="fw-bold text-primary fs-5" id="montoLabel">S/ 5,000</span>
+              </div>
+              <input type="range" class="form-range" id="sliderMonto"
+                     min="1000" max="100000" step="500" value="5000">
+              <div class="d-flex justify-content-between text-muted" style="font-size:.75rem">
+                <span>S/ 1,000</span><span>S/ 100,000</span>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Plazo en meses</label>
+              <select id="selectPlazo" class="form-select">
+                <option value="6">6 meses</option>
+                <option value="12" selected>12 meses</option>
+                <option value="18">18 meses</option>
+                <option value="24">24 meses</option>
+                <option value="36">36 meses</option>
+                <option value="48">48 meses</option>
+                <option value="60">60 meses</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Tasa de interés anual</label>
+              <select id="selectTasa" class="form-select">
+                <option value="18">18% — Personal básico</option>
+                <option value="24" selected>24% — Personal estándar</option>
+                <option value="30">30% — Personal express</option>
+                <option value="12">12% — Con garantía</option>
+              </select>
+            </div>
+
+            <!-- Resultado del simulador -->
+            <div class="prestamo-result">
+              <div class="text-center mb-3">
+                <div class="small mb-1" style="color:rgba(255,255,255,.7)">Cuota mensual estimada</div>
+                <div class="cuota-valor" id="cuotaValor">S/ 0.00</div>
+              </div>
+              <div class="row g-2 text-center small">
+                <div class="col-6" style="border-right:1px solid rgba(255,255,255,.2)">
+                  <div style="color:rgba(255,255,255,.6)">Total a pagar</div>
+                  <div class="fw-bold" id="totalPagar">—</div>
+                </div>
+                <div class="col-6">
+                  <div style="color:rgba(255,255,255,.6)">Total intereses</div>
+                  <div class="fw-bold" id="totalInteres">—</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario de solicitud -->
+      <div class="col-12 col-lg-7">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0 pt-3">
+            <h6 class="fw-bold mb-0"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Formulario de solicitud</h6>
+          </div>
+          <div class="card-body">
+            <form id="formPrestamo" novalidate>
+
+              <!-- Datos del simulador (pre-llenados, solo lectura) -->
+              <div class="row g-3 mb-3">
+                <div class="col-6">
+                  <label class="form-label small fw-semibold">Monto solicitado</label>
+                  <div class="input-group">
+                    <span class="input-group-text">S/</span>
+                    <input type="text" id="solMonto" class="form-control bg-light" readonly>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small fw-semibold">Plazo</label>
+                  <input type="text" id="solPlazo" class="form-control bg-light" readonly>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small fw-semibold">Tasa anual</label>
+                  <input type="text" id="solTasa" class="form-control bg-light" readonly>
+                </div>
+                <div class="col-6">
+                  <label class="form-label small fw-semibold">Cuota mensual</label>
+                  <div class="input-group">
+                    <span class="input-group-text">S/</span>
+                    <input type="text" id="solCuota" class="form-control bg-light fw-bold text-success" readonly>
+                  </div>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Propósito del préstamo</label>
+                <select id="proposito" class="form-select" required>
+                  <option value="">Selecciona el propósito</option>
+                  <option value="consumo">Consumo personal</option>
+                  <option value="educacion">Educación</option>
+                  <option value="salud">Salud</option>
+                  <option value="vivienda">Mejora de vivienda</option>
+                  <option value="negocio">Capital de negocio</option>
+                  <option value="viaje">Viaje</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Ingresos mensuales (S/)</label>
+                <div class="input-group">
+                  <span class="input-group-text">S/</span>
+                  <input type="number" id="ingresos" class="form-control"
+                         placeholder="Ej: 3000" min="0" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="chkTerminos" required>
+                  <label class="form-check-label small" for="chkTerminos">
+                    Confirmo que los datos son correctos y acepto los
+                    <a href="#" class="text-primary">términos y condiciones</a> del préstamo.
+                  </label>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="btnSolicitar">
+                <span id="btnSolText"><i class="bi bi-send-check me-2"></i>Enviar solicitud</span>
+                <span id="btnSolSpinner" class="d-none">
+                  <span class="spinner-border spinner-border-sm me-2"></span>Enviando...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Solicitudes anteriores -->
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-header bg-white border-0 pt-3">
+            <h6 class="fw-bold mb-0"><i class="bi bi-list-ul me-2 text-primary"></i>Mis solicitudes</h6>
+          </div>
+          <div class="card-body p-0" id="listaSolicitudes">
+            <div class="text-center py-3">
+              <div class="spinner-border spinner-border-sm text-primary"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+  import { supabase, requireAuth, formatSoles, formatFecha, showToast } from '../js/supabase.js';
+
+  const user = await requireAuth();
+  document.getElementById('userName').textContent = user.user_metadata?.full_name?.split(' ')[0] || user.email;
+
+  document.getElementById('btnLogout').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.replace('/index.html');
+  });
+
+  // ── Fórmula de amortización francesa ──────────────────
+  // C = P × [r(1+r)^n] / [(1+r)^n - 1]
+  function calcularCuota(monto, plazoMeses, tasaAnual) {
+    const r = (tasaAnual / 100) / 12;    // tasa mensual
+    const n = plazoMeses;
+    if (r === 0) return monto / n;
+    const factor = Math.pow(1 + r, n);
+    return monto * (r * factor) / (factor - 1);
+  }
+
+  function actualizar() {
+    const monto     = parseInt(document.getElementById('sliderMonto').value);
+    const plazo     = parseInt(document.getElementById('selectPlazo').value);
+    const tasa      = parseFloat(document.getElementById('selectTasa').value);
+    const cuota     = calcularCuota(monto, plazo, tasa);
+    const total     = cuota * plazo;
+    const intereses = total - monto;
+
+    document.getElementById('montoLabel').textContent  = formatSoles(monto);
+    document.getElementById('cuotaValor').textContent  = formatSoles(cuota);
+    document.getElementById('totalPagar').textContent  = formatSoles(total);
+    document.getElementById('totalInteres').textContent = formatSoles(intereses);
+
+    // Sincronizar con el formulario
+    document.getElementById('solMonto').value = monto.toLocaleString('es-PE');
+    document.getElementById('solPlazo').value = `${plazo} meses`;
+    document.getElementById('solTasa').value  = `${tasa}% TEA`;
+    document.getElementById('solCuota').value = cuota.toFixed(2);
+  }
+
+  // Escuchar cambios en el simulador
+  ['sliderMonto','selectPlazo','selectTasa'].forEach(id => {
+    document.getElementById(id).addEventListener('input', actualizar);
+  });
+  actualizar(); // cálculo inicial
+
+  // ── Enviar solicitud de préstamo ───────────────────────
+  const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+
+  document.getElementById('formPrestamo').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const proposito = document.getElementById('proposito').value;
+    const ingresos  = parseFloat(document.getElementById('ingresos').value);
+    const monto     = parseInt(document.getElementById('sliderMonto').value);
+    const plazo     = parseInt(document.getElementById('selectPlazo').value);
+    const tasa      = parseFloat(document.getElementById('selectTasa').value);
+    const cuota     = calcularCuota(monto, plazo, tasa);
+
+    document.getElementById('btnSolText').classList.add('d-none');
+    document.getElementById('btnSolSpinner').classList.remove('d-none');
+
+    const { data, error } = await supabase.from('solicitudes_prestamo').insert({
+      user_id:       user.id,
+      monto,
+      plazo_meses:   plazo,
+      tasa_anual:    tasa,
+      cuota_mensual: parseFloat(cuota.toFixed(2)),
+      proposito,
+      estado:        'pendiente'
+    }).select().single();
+
+    document.getElementById('btnSolText').classList.remove('d-none');
+    document.getElementById('btnSolSpinner').classList.add('d-none');
+
+    if (error) {
+      showToast('Error al enviar la solicitud. Intenta nuevamente.', 'danger');
+      return;
+    }
+
+    // Mostrar modal de éxito con UUID
+    document.getElementById('numSolicitud').textContent = data.id.slice(0, 8).toUpperCase();
+    document.getElementById('exitoMonto').textContent   = formatSoles(monto);
+    document.getElementById('exitoCuota').textContent   = formatSoles(cuota);
+    modalExito.show();
+    document.getElementById('formPrestamo').reset();
+    actualizar();
+    cargarSolicitudes();
+  });
+
+  // ── Historial de solicitudes ───────────────────────────
+  async function cargarSolicitudes() {
+    const { data: sols } = await supabase
+      .from('solicitudes_prestamo').select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    const el = document.getElementById('listaSolicitudes');
+    if (!sols || sols.length === 0) {
+      el.innerHTML = `<p class="text-muted text-center py-3 small">Sin solicitudes previas.</p>`;
+      return;
+    }
+
+    const estadoColor = { pendiente: 'warning', aprobado: 'success', rechazado: 'danger' };
+    el.innerHTML = `
+      <ul class="list-group list-group-flush">
+        ${sols.map(s => `
+          <li class="list-group-item d-flex justify-content-between align-items-center px-3">
+            <div>
+              <div class="fw-semibold small">${formatSoles(s.monto)} · ${s.plazo_meses} meses</div>
+              <div class="text-muted" style="font-size:.75rem">
+                ID: ${s.id.slice(0,8).toUpperCase()} · ${formatFecha(s.created_at)}
+              </div>
+            </div>
+            <span class="badge bg-${estadoColor[s.estado] || 'secondary'} text-capitalize">
+              ${s.estado}
+            </span>
+          </li>
+        `).join('')}
+      </ul>`;
+  }
+
+  cargarSolicitudes();
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!-- ============================================================
+     _navbar.html — Fragmento compartido (copiar en cada página)
+     ============================================================ -->
+
+<!-- Toast Global (copiar también en cada página) -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="appToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastBody">Operación exitosa</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Spinner Global -->
+<div id="loadingSpinner" class="d-none">
+  <div class="text-center">
+    <div class="spinner-border text-primary" style="width:3rem;height:3rem;" role="status"></div>
+    <p class="mt-2 text-muted">Cargando...</p>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-banco">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="/modulos/dashboard.html">
+      <i class="bi bi-bank me-2"></i>MI BANCO
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <li class="nav-item">
+          <span class="nav-link" id="userGreeting">
+            <i class="bi bi-person-circle me-1"></i><span id="userName">Cliente</span>
+          </span>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-sm btn-outline-light" id="btnLogout">
+            <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Sidebar + contenido (estructura de layout) -->
+<div class="portal-layout">
+  <nav class="sidebar d-none d-lg-block">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link" href="/modulos/dashboard.html">
+          <i class="bi bi-grid-1x2"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/modulos/transacciones.html">
+          <i class="bi bi-arrow-left-right"></i> Transacciones
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/modulos/pagos.html">
+          <i class="bi bi-credit-card"></i> Pagos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/modulos/prestamos.html">
+          <i class="bi bi-cash-stack"></i> Préstamos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/modulos/ahorro.html">
+          <i class="bi bi-piggy-bank"></i> Ahorro
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <!-- Aquí va el div.main-content de cada página -->

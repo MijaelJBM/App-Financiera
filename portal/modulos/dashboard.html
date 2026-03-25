@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Mi Banco</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Toast Global -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="appToast" class="toast align-items-center text-white bg-success border-0">
+    <div class="d-flex">
+      <div class="toast-body" id="toastBody">OK</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Spinner Global -->
+<div id="loadingSpinner" class="d-none">
+  <div class="text-center">
+    <div class="spinner-border text-primary" style="width:3rem;height:3rem;"></div>
+    <p class="mt-2 text-muted">Cargando...</p>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-banco">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="dashboard.html">
+      <i class="bi bi-bank me-2"></i>MI BANCO
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <li class="nav-item">
+          <span class="nav-link">
+            <i class="bi bi-person-circle me-1" style="color:var(--color-acento)"></i>
+            <span id="userName" style="color:var(--color-acento);font-weight:600">Cliente</span>
+          </span>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-sm btn-outline-light" id="btnLogout">
+            <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Layout -->
+<div class="portal-layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar d-none d-lg-block">
+    <ul class="nav flex-column">
+      <li><a class="nav-link active" href="dashboard.html"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
+      <li><a class="nav-link" href="transacciones.html"><i class="bi bi-arrow-left-right"></i> Transacciones</a></li>
+      <li><a class="nav-link" href="pagos.html"><i class="bi bi-credit-card"></i> Pagos</a></li>
+      <li><a class="nav-link" href="prestamos.html"><i class="bi bi-cash-stack"></i> Préstamos</a></li>
+      <li><a class="nav-link" href="ahorro.html"><i class="bi bi-piggy-bank"></i> Ahorro</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+
+    <!-- Saludo -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="mb-0 fw-bold">Bienvenido, <span id="welcomeName">Cliente</span></h4>
+        <p class="text-muted small mb-0" id="fechaHoy"></p>
+      </div>
+      <span class="badge bg-success"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>En línea</span>
+    </div>
+
+    <!-- Tarjetas de saldo -->
+    <div class="row g-3 mb-4" id="cuentasContainer">
+      <!-- Se inyectan dinámicamente -->
+      <div class="col-12 text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <p class="text-muted mt-2">Cargando cuentas...</p>
+      </div>
+    </div>
+
+    <!-- Accesos rápidos -->
+    <h6 class="fw-semibold text-muted text-uppercase mb-3" style="font-size:.8rem;letter-spacing:1px">
+      Accesos rápidos
+    </h6>
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="transacciones.html" class="acceso-rapido">
+          <i class="bi bi-arrow-left-right"></i>
+          <span>Transacciones</span>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="pagos.html" class="acceso-rapido">
+          <i class="bi bi-credit-card-2-front"></i>
+          <span>Pagos</span>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="prestamos.html" class="acceso-rapido">
+          <i class="bi bi-cash-stack"></i>
+          <span>Préstamos</span>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="ahorro.html" class="acceso-rapido">
+          <i class="bi bi-piggy-bank"></i>
+          <span>Ahorro</span>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="#" class="acceso-rapido">
+          <i class="bi bi-qr-code-scan"></i>
+          <span>QR Pago</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Últimas transacciones -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center border-0 pt-3">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-clock-history me-2 text-primary"></i>Últimos movimientos</h6>
+        <a href="transacciones.html" class="btn btn-sm btn-outline-primary">Ver todos</a>
+      </div>
+      <div class="card-body p-0">
+        <div id="txnRecientes">
+          <div class="text-center py-3">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+  import { supabase, requireAuth, formatSoles, formatFecha } from '../js/supabase.js';
+
+  // ── Protección de ruta ─────────────────────────────────
+  const user = await requireAuth();
+
+  // Mostrar nombre del usuario
+  const nombreDisplay = user.user_metadata?.full_name?.split(' ')[0] || user.email;
+  document.getElementById('userName').textContent    = nombreDisplay;
+  document.getElementById('welcomeName').textContent = nombreDisplay;
+  document.getElementById('fechaHoy').textContent    =
+    new Date().toLocaleDateString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // ── Logout ─────────────────────────────────────────────
+  document.getElementById('btnLogout').addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.replace('/index.html');
+  });
+
+  // ── Cargar cuentas ─────────────────────────────────────
+  const { data: cuentas, error } = await supabase
+    .from('cuentas')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('tipo');
+
+  const container = document.getElementById('cuentasContainer');
+
+  if (!cuentas || cuentas.length === 0) {
+    container.innerHTML = `<div class="col-12">
+      <div class="alert alert-info">No se encontraron cuentas asociadas.</div>
+    </div>`;
+  } else {
+    container.innerHTML = cuentas.map(c => `
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card card-saldo p-3 ${c.tipo}">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <span class="badge ${c.tipo === 'corriente' ? 'bg-primary' : 'bg-success'} mb-1">
+                ${c.tipo === 'corriente' ? 'Cuenta Corriente' : 'Cuenta de Ahorro'}
+              </span>
+              <div class="cuenta-numero">${maskCuenta(c.numero_cuenta)}</div>
+            </div>
+            <i class="bi ${c.tipo === 'corriente' ? 'bi-credit-card' : 'bi-piggy-bank'} fs-3 text-muted"></i>
+          </div>
+          <div class="monto">${formatSoles(c.saldo)}</div>
+          <div class="text-muted small mt-1">${c.moneda} · Saldo disponible</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Cargar últimas 5 transacciones ────────────────────
+  const { data: txns } = await supabase
+    .from('transacciones')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('fecha', { ascending: false })
+    .limit(5);
+
+  const txnEl = document.getElementById('txnRecientes');
+  if (!txns || txns.length === 0) {
+    txnEl.innerHTML = `<p class="text-muted text-center py-3">Sin movimientos recientes.</p>`;
+  } else {
+    txnEl.innerHTML = `
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <tbody>
+            ${txns.map(t => `
+              <tr>
+                <td class="ps-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center
+                      ${t.tipo === 'debito' ? 'bg-danger' : 'bg-success'} bg-opacity-10"
+                      style="width:36px;height:36px">
+                      <i class="bi ${t.tipo === 'debito' ? 'bi-arrow-up-right text-danger' : 'bi-arrow-down-left text-success'}"></i>
+                    </div>
+                    <div>
+                      <div class="fw-semibold small">${t.descripcion}</div>
+                      <div class="text-muted" style="font-size:.75rem">${formatFecha(t.fecha)}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-end pe-3 align-middle">
+                  <span class="${t.tipo === 'debito' ? 'monto-debito' : 'monto-credito'}">
+                    ${t.tipo === 'debito' ? '- ' : '+ '}${formatSoles(t.monto)}
+                  </span>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  // ── Enmascarar número de cuenta ───────────────────────
+  function maskCuenta(num) {
+    if (!num) return '****';
+    const parts = num.split('-');
+    return parts.length > 1
+      ? `••• - •••••• - ${parts[parts.length - 1].slice(-4)}`
+      : `•••• •••• ${num.slice(-4)}`;
+  }
+</script>
+</body>
+</html>
