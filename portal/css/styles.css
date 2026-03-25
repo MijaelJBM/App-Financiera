@@ -1,1 +1,195 @@
+/* ============================================================
+   css/styles.css — Estilos globales del Portal Financiero
+   ============================================================ */
 
+/* ── Variables corporativas del banco ── */
+:root {
+  --color-primario:    #1A3A6B;
+  --color-secundario:  #2E75B6;
+  --color-acento:      #F0A500;
+  --color-fondo:       #F5F7FA;
+  --color-texto:       #2C3E50;
+  --color-debito:      #DC3545;
+  --color-credito:     #198754;
+  --sidebar-width:     240px;
+}
+
+/* ── Reset y base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  margin: 0;
+}
+
+/* ── Navbar ── */
+.navbar-banco {
+  background-color: var(--color-primario) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.navbar-banco .navbar-brand {
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  color: #fff !important;
+}
+.navbar-banco .nav-link { color: rgba(255,255,255,.85) !important; }
+.navbar-banco .nav-link:hover,
+.navbar-banco .nav-link.active { color: #fff !important; }
+.navbar-banco .nav-link.active { border-bottom: 2px solid var(--color-acento); }
+#userGreeting { color: var(--color-acento); font-weight: 600; }
+
+/* ── Layout con sidebar ── */
+.portal-layout {
+  display: flex;
+  min-height: calc(100vh - 56px);
+}
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--color-primario);
+  padding: 1.5rem 0;
+  flex-shrink: 0;
+}
+.sidebar .nav-link {
+  color: rgba(255,255,255,.75);
+  padding: .65rem 1.5rem;
+  font-size: .92rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all .2s;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  color: #fff;
+  background: rgba(255,255,255,.12);
+  border-left: 3px solid var(--color-acento);
+}
+.sidebar .nav-link i { font-size: 1.1rem; width: 20px; }
+.main-content {
+  flex: 1;
+  padding: 1.75rem 2rem;
+  overflow-x: hidden;
+}
+
+/* ── Cards de saldo ── */
+.card-saldo {
+  border: none;
+  border-left: 5px solid var(--color-secundario);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  transition: transform .2s, box-shadow .2s;
+}
+.card-saldo:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.13);
+}
+.card-saldo .monto {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--color-primario);
+}
+.card-saldo .cuenta-numero {
+  font-size: .82rem;
+  color: #888;
+  letter-spacing: 2px;
+}
+.card-saldo.ahorro  { border-left-color: #198754; }
+.card-saldo.corriente { border-left-color: var(--color-secundario); }
+
+/* ── Accesos rápidos ── */
+.acceso-rapido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 1.2rem;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--color-texto);
+  transition: all .2s;
+  font-size: .85rem;
+  font-weight: 500;
+}
+.acceso-rapido i {
+  font-size: 1.8rem;
+  color: var(--color-secundario);
+}
+.acceso-rapido:hover {
+  background: var(--color-primario);
+  color: #fff;
+  border-color: var(--color-primario);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(26,58,107,.3);
+}
+.acceso-rapido:hover i { color: var(--color-acento); }
+
+/* ── Tabla transacciones ── */
+.badge-debito  { background-color: #fde8e8; color: var(--color-debito); }
+.badge-credito { background-color: #e6f4ea; color: var(--color-credito); }
+.monto-debito  { color: var(--color-debito);  font-weight: 600; }
+.monto-credito { color: var(--color-credito); font-weight: 600; }
+
+/* ── Barra de progreso ahorro ── */
+.progress { height: 14px; border-radius: 99px; }
+.progress-bar-ahorro {
+  background: linear-gradient(90deg, #198754, #5cb85c);
+}
+
+/* ── Auth pages ── */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-secundario) 100%);
+}
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+.auth-logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  letter-spacing: 1px;
+}
+
+/* ── Simulador préstamo ── */
+.prestamo-result {
+  background: var(--color-primario);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.prestamo-result .cuota-valor {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--color-acento);
+}
+
+/* ── Spinner overlay ── */
+#loadingSpinner {
+  position: fixed; inset: 0;
+  background: rgba(255,255,255,.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+
+/* ── Toast contenedor ── */
+.toast-container { z-index: 9999; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main-content { padding: 1rem; }
+  .card-saldo .monto { font-size: 1.4rem; }
+}
